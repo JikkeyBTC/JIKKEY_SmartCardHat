@@ -398,9 +398,11 @@ function traceCwz(y) { return -cwz(y); }
 function isCopperLayer(layer) { return layer === "F.Cu" || layer === "B.Cu" || layer === "top" || layer === "bottom"; }
 function stepRefForGroup(name) {
   if (name === "smartcard_body" || name === "smartcard_contact") return "J41";
+  if (name === "usb_shell") return "J31";
+  if (name === "bottom_header") return "J21";
   return "";
 }
-function usesStepHighlight(ref) { return ref === "J41"; }
+function usesStepHighlight(ref) { return ref === "J41" || ref === "J31" || ref === "J21"; }
 function esc(value) {
   return String(value ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[ch]));
 }
@@ -416,6 +418,15 @@ function netName(net) {
 }
 function colorFor(group) {
   return { power: 0xef7d32, smartcard: 0x19a7a2, rpi: 0x6f7ee8, other: 0x77808d }[group] || 0x77808d;
+}
+function componentSearchText(comp) {
+  return `${comp.ref} ${comp.value} ${comp.footprint} ${comp.groupKo} ${comp.purpose}`.toLowerCase();
+}
+function componentMatchesSearch(comp, q) {
+  return !q || componentSearchText(comp).includes(q);
+}
+function componentMatchesActiveCategory(comp, q) {
+  return currentFilter !== "all" && comp.group === currentFilter && componentMatchesSearch(comp, q);
 }
 function materialFor(hex, opacity = 1, roughness = .72, metalness = .05) {
   const mat = new THREE.MeshStandardMaterial({
@@ -885,15 +896,19 @@ function setView(view) {
 }
 
 function updateStepHighlights() {
+  const q = document.getElementById("search")?.value.trim().toLowerCase() || "";
   stepMeshObjects.forEach(obj => {
     const selected = usesStepHighlight(selectedRef) && obj.userData.ref === selectedRef;
+    const comp = obj.userData.ref ? byRef.get(obj.userData.ref) : null;
+    const categoryHighlighted = comp ? componentMatchesActiveCategory(comp, q) : false;
+    const highlighted = selected || categoryHighlighted;
     const mats = obj.material ? (Array.isArray(obj.material) ? obj.material : [obj.material]) : [];
     mats.forEach(mat => {
       const baseColor = mat.userData?.baseColor ?? 0x777777;
       const baseOpacity = mat.userData?.baseOpacity ?? mat.opacity ?? 1;
-      if (mat.color) mat.color.setHex(selected ? SELECT_BLUE : baseColor);
-      if (mat.emissive) mat.emissive.setHex(selected ? SELECT_BLUE_EMISSIVE : 0x000000);
-      setMaterialOpacity(mat, selected ? Math.max(baseOpacity, .86) : baseOpacity);
+      if (mat.color) mat.color.setHex(highlighted ? SELECT_BLUE : baseColor);
+      if (mat.emissive) mat.emissive.setHex(highlighted ? SELECT_BLUE_EMISSIVE : 0x000000);
+      setMaterialOpacity(mat, highlighted ? Math.max(baseOpacity, .86) : baseOpacity);
     });
   });
 }
@@ -914,18 +929,21 @@ function setSelectionOverlayVisible(ref, visible) {
 function selectComponent(ref) {
   const comp = byRef.get(ref);
   if (!comp) return;
+  const q = document.getElementById("search").value.trim().toLowerCase();
   selectedRef = ref;
   for (const [key, mat] of componentMaterials) {
     const obj = componentObjects.get(key);
+    const item = byRef.get(key);
     const base = obj.userData.baseOpacity ?? .92;
     const selected = key === ref;
     const stepHighlighted = usesStepHighlight(key);
+    const categoryHighlighted = componentMatchesActiveCategory(item, q);
     setObjectOpacityFactor(obj, 1);
-    mat.color.setHex(selected ? SELECT_BLUE : colorFor(byRef.get(key).group));
+    mat.color.setHex(selected ? SELECT_BLUE : colorFor(item.group));
     setMaterialOpacity(mat, selected && !stepHighlighted ? .68 : base);
     if (mat.emissive) mat.emissive.setHex(selected ? SELECT_BLUE_EMISSIVE : 0x000000);
     setObjectEmissive(obj, selected && !stepHighlighted ? SELECT_BLUE_CHILD_EMISSIVE : 0x000000);
-    setSelectionOverlayVisible(key, selected && !stepHighlighted);
+    setSelectionOverlayVisible(key, (selected || categoryHighlighted) && !stepHighlighted && obj.visible);
   }
   updateStepHighlights();
   document.querySelectorAll(".component-row").forEach(el => el.classList.toggle("active", el.dataset.ref === ref));
@@ -956,9 +974,10 @@ function applyFilters() {
   const showLabels = document.getElementById("toggleLabels").checked;
 
   COMPONENTS.forEach(comp => {
-    const text = `${comp.ref} ${comp.value} ${comp.footprint} ${comp.groupKo} ${comp.purpose}`.toLowerCase();
+    const text = componentSearchText(comp);
     const matchFilter = currentFilter === "all" || comp.group === currentFilter;
     const matchSearch = !q || text.includes(q);
+    const categoryHighlighted = componentMatchesActiveCategory(comp, q);
     const layerVisible = (comp.layer === "top" && showTop) || (comp.layer === "bottom" && showBottom);
     const obj = componentObjects.get(comp.ref);
     if (obj) {
@@ -976,7 +995,7 @@ function applyFilters() {
       } else {
         setObjectEmissive(obj, 0x000000);
       }
-      setSelectionOverlayVisible(comp.ref, active && !stepHighlighted && obj.visible);
+      setSelectionOverlayVisible(comp.ref, (active || categoryHighlighted) && !stepHighlighted && obj.visible);
     }
   });
   copperObjects.forEach(obj => {
@@ -992,10 +1011,13 @@ function applyFilters() {
     mats.forEach(mat => {
       const base = mat.userData?.baseOpacity ?? mat.opacity ?? 1;
       const selected = usesStepHighlight(selectedRef) && obj.userData.ref === selectedRef;
+      const comp = obj.userData.ref ? byRef.get(obj.userData.ref) : null;
+      const categoryHighlighted = comp ? componentMatchesActiveCategory(comp, q) : false;
+      const highlighted = selected || categoryHighlighted;
       const baseColor = mat.userData?.baseColor ?? 0x777777;
-      if (mat.color) mat.color.setHex(selected ? SELECT_BLUE : baseColor);
-      if (mat.emissive) mat.emissive.setHex(selected ? SELECT_BLUE_EMISSIVE : 0x000000);
-      setMaterialOpacity(mat, selected ? Math.max(base, .86) : base);
+      if (mat.color) mat.color.setHex(highlighted ? SELECT_BLUE : baseColor);
+      if (mat.emissive) mat.emissive.setHex(highlighted ? SELECT_BLUE_EMISSIVE : 0x000000);
+      setMaterialOpacity(mat, highlighted ? Math.max(base, .86) : base);
     });
   });
   labelSprites.forEach(sprite => {
@@ -1007,7 +1029,7 @@ function applyFilters() {
   });
   document.querySelectorAll(".component-row").forEach(row => {
     const comp = byRef.get(row.dataset.ref);
-    const text = `${comp.ref} ${comp.value} ${comp.footprint} ${comp.groupKo} ${comp.purpose}`.toLowerCase();
+    const text = componentSearchText(comp);
     const matchFilter = currentFilter === "all" || comp.group === currentFilter;
     const matchSearch = !q || text.includes(q);
     row.style.display = matchFilter && matchSearch ? "" : "none";
