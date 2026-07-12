@@ -250,85 +250,465 @@ aside {
   }
   aside { grid-template-rows: auto minmax(220px, 38dvh); }
 }
+
+/* JLCPCB-style placement review UI */
+body {
+  height: 100dvh;
+  overflow: hidden;
+  background: #e6eaef;
+  color: #2f353b;
+  font-size: 14px;
+}
+button, input, select { font: inherit; }
+.app {
+  height: 100dvh;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 40px minmax(0, 1fr) 300px;
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  background: #202020;
+  border-bottom: 1px solid #343434;
+  color: #d6d6d6;
+}
+.topbar-left,
+.topbar-center,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.topbar-left { padding-left: 28px; }
+.topbar-right { padding-right: 28px; }
+.view-btn,
+.tool-btn,
+.mode-btn {
+  height: 30px;
+  min-width: 54px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: #bfc3c8;
+  cursor: pointer;
+  padding: 0 12px;
+}
+.tool-btn {
+  min-width: 30px;
+  padding: 0;
+  font-size: 17px;
+}
+.view-btn.active,
+.mode-btn.active {
+  background: #1677ff;
+  color: #fff;
+}
+.topbar-left .view-btn.active {
+  background: #f5f6f8;
+  color: #333;
+}
+.workspace {
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  background: #e6eaef;
+}
+.side-panel {
+  min-width: 0;
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #555e68;
+  z-index: 4;
+  pointer-events: none;
+}
+.side-panel label,
+.side-panel .info {
+  pointer-events: auto;
+}
+.viewer {
+  min-width: 0;
+  border: 0;
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+  background: #e6eaef;
+}
+.side-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.side-check input {
+  width: 14px;
+  height: 14px;
+  accent-color: #1677ff;
+}
+.fine-controls {
+  margin-top: 4px;
+  display: grid;
+  gap: 7px;
+  font-size: 12px;
+  color: #6f7780;
+}
+.slider {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  align-items: center;
+  gap: 7px;
+  color: #6f7780;
+  font-size: 12px;
+}
+.slider input { width: 100%; }
+.canvas-wrap {
+  height: 100%;
+  min-height: 0;
+  position: relative;
+}
+#pcb3d {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: crosshair;
+}
+#pcb3d:active { cursor: move; }
+.hint {
+  position: absolute;
+  left: 24px;
+  bottom: 20px;
+  max-width: min(560px, calc(100% - 40px));
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  color: #a0a6ad;
+  font-size: 12px;
+  pointer-events: none;
+}
+.info {
+  margin-top: auto;
+  max-height: 260px;
+  overflow: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #8a929a;
+  font-size: 12px;
+  line-height: 1.45;
+  padding: 0;
+}
+.info .eyebrow {
+  color: #818991;
+  font-size: 11px;
+  font-weight: 700;
+}
+.info h2 {
+  margin: 4px 0;
+  color: #4c555e;
+  font-size: 16px;
+}
+.info .value {
+  color: #7b848d;
+  margin-bottom: 7px;
+}
+.info .purpose { margin: 0 0 8px; }
+.facts {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 4px 8px;
+  font-size: 12px;
+}
+.facts dt { color: #8a929a; }
+.facts dd {
+  margin: 0;
+  min-width: 0;
+  word-break: break-word;
+}
+.net-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+.net {
+  border: 1px solid #d6dce2;
+  background: #fff;
+  border-radius: 999px;
+  padding: 2px 6px;
+  font-size: 11px;
+  color: #5c6570;
+}
+.component-panel {
+  min-height: 0;
+  background: #fff;
+  border-top: 1px solid #d8dde3;
+  display: grid;
+  grid-template-rows: 56px minmax(0, 1fr);
+  box-shadow: 0 -1px 5px rgba(0,0,0,.04);
+}
+.panel-toolbar {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 28px 0;
+  border-bottom: 1px solid #edf0f3;
+}
+.table-tabs {
+  display: flex;
+  align-self: stretch;
+  align-items: flex-end;
+  gap: 4px;
+}
+.tab {
+  border: 0;
+  border-radius: 7px 7px 0 0;
+  background: #eef1f5;
+  color: #9ba3ac;
+  height: 38px;
+  padding: 0 16px;
+  font-weight: 700;
+  cursor: default;
+}
+.tab.active {
+  background: #4a4f55;
+  color: #fff;
+}
+.table-options {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  color: #636b74;
+  font-size: 13px;
+}
+.chip {
+  border: 1px solid #d6dce2;
+  border-radius: 4px;
+  background: #fff;
+  color: #4a5159;
+  height: 30px;
+  padding: 0 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.chip.active {
+  background: #1677ff;
+  border-color: #1677ff;
+  color: #fff;
+}
+.table-meta {
+  margin-left: auto;
+  white-space: nowrap;
+  color: #7a828a;
+}
+.search {
+  width: 230px;
+  min-width: 0;
+  flex: 0 0 auto;
+  height: 34px;
+  border: 1px solid #dce1e7;
+  border-radius: 4px;
+  padding: 0 12px;
+  background: #fff;
+}
+.dfm-filter {
+  height: 34px;
+  border: 1px solid #dce1e7;
+  border-radius: 4px;
+  background: #fff;
+  padding: 0 28px 0 10px;
+  color: #5c6570;
+}
+.table-wrap {
+  min-height: 0;
+  overflow: auto;
+}
+.placement-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 13px;
+}
+.placement-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #eef2f6;
+  color: #313840;
+  text-align: left;
+  padding: 10px 16px;
+  font-weight: 700;
+  border-bottom: 1px solid #e4e8ee;
+}
+.placement-table tbody td {
+  padding: 9px 16px;
+  border-bottom: 1px solid #edf0f3;
+  color: #343b43;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.component-row {
+  cursor: pointer;
+}
+.placement-table tr.component-row {
+  display: table-row;
+  width: auto;
+  border: 0;
+  background: inherit;
+  padding: 0;
+  border-radius: 0;
+  text-align: left;
+}
+.placement-table tbody tr:nth-child(even) { background: #f7f9fc; }
+.placement-table tbody tr:hover td,
+.placement-table tbody tr.active td {
+  background: #e8f1ff;
+}
+.row-ref { font-weight: 800; }
+.row-comment { color: #3d454d; }
+.dfm-pass {
+  color: #2f9e65;
+  font-weight: 700;
+}
+@media (max-width: 980px) {
+  .app { grid-template-rows: 40px minmax(0, 1fr) 320px; }
+  .workspace { grid-template-columns: 150px minmax(0, 1fr); }
+  .topbar-left { padding-left: 8px; }
+  .topbar-right { padding-right: 8px; }
+  .table-meta { display: none; }
+  .panel-toolbar { padding-inline: 10px; gap: 8px; }
+  .search { width: 150px; }
+}
 </style>
 </head>
 <body>
 <div class="app">
-  <header>
-    <div>
-      <h1>SeedSigner Smartcard HAT REV 1.1 3D 클릭 도면</h1>
-      <div class="meta">좌표 기준: STEP/기판 배치 좌표. 요청 제외 부품 반영, 부품 30개, 상면 29개, 하면 1개.</div>
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="view-btn active" data-view="front">Top</button>
+      <button class="view-btn" data-view="back">Bottom</button>
+      <button class="tool-btn" type="button" title="공유">↗</button>
+      <button class="tool-btn" type="button" title="저장">⇩</button>
+      <button class="tool-btn" type="button" title="확대">＋</button>
+      <button class="tool-btn" type="button" title="축소">－</button>
+      <button class="tool-btn" type="button" title="화면 맞춤">⌖</button>
     </div>
-    <div class="meta">마우스로 돌려 앞면과 뒷면을 보고, 부품을 클릭해 용도를 확인할 수 있습니다.</div>
+    <div class="topbar-center">
+      <button class="mode-btn active view-btn" data-view="front">2D</button>
+      <button class="mode-btn view-btn" data-view="iso">3D</button>
+    </div>
+    <div class="topbar-right">
+      <span>SeedSigner Smartcard HAT REV 1.1</span>
+    </div>
   </header>
-  <main class="layout">
-    <section class="viewer">
-      <div class="toolbar" aria-label="3D 도면 조절">
-        <button class="chip active" data-filter="all">전체</button>
-        <button class="chip" data-filter="power">전원/보호</button>
-        <button class="chip" data-filter="smartcard">스마트카드</button>
-        <button class="chip" data-filter="rpi">라즈베리파이</button>
-        <button class="view-btn" data-view="front">앞면</button>
-        <button class="view-btn" data-view="back">뒷면</button>
-        <button class="view-btn" data-view="iso">입체</button>
-        <input id="search" class="search" type="search" placeholder="부품 검색: U41, USB, 100n">
-        <label class="toggle"><input id="toggleTop" type="checkbox" checked> 상면</label>
-        <label class="toggle"><input id="toggleBottom" type="checkbox" checked> 하면</label>
-        <label class="toggle"><input id="toggleComponents" type="checkbox" checked> 부품</label>
-        <label class="toggle"><input id="toggleCopper" type="checkbox" checked> 배선/패드</label>
-        <label class="toggle"><input id="toggleLabels" type="checkbox" checked> 라벨</label>
+  <main class="workspace">
+    <aside class="side-panel">
+      <label class="side-check"><input type="checkbox" disabled> Hide Drilled Holes</label>
+      <label class="side-check"><input id="toggleComponents" type="checkbox" checked> Show Components</label>
+      <label class="side-check"><input id="toggleLabels" type="checkbox" checked> Show Designator</label>
+      <label class="side-check"><input id="toggleCopper" type="checkbox" checked> Show Conductors</label>
+      <label class="side-check"><input id="toggleTop" type="checkbox" checked> Top Side</label>
+      <label class="side-check"><input id="toggleBottom" type="checkbox" checked> Bottom Side</label>
+      <div class="fine-controls">
         <label class="slider">기판 <input id="boardOpacity" type="range" min="0.12" max="0.9" step="0.01" value="0.42"></label>
         <label class="slider">배선 <input id="copperOpacity" type="range" min="0" max="1" step="0.01" value="0.72"></label>
       </div>
-      <div class="canvas-wrap">
-        <canvas id="pcb3d" aria-label="SeedSigner Smartcard HAT 3D PCB 도면"></canvas>
-        <div class="hint">드래그: 회전 · 휠: 확대/축소 · 클릭: 부품 선택 · 큰 소켓은 내부 부품이 보이도록 반투명 처리했습니다.</div>
-      </div>
-    </section>
-    <aside>
       <section class="info" id="infoPanel" aria-live="polite">
         <div class="eyebrow">선택 대기</div>
         <h2>부품을 클릭하세요</h2>
-        <div class="value">3D 도면의 부품이나 아래 목록을 선택하면 설명이 표시됩니다.</div>
-        <p class="purpose">주황은 전원/보호, 청록은 스마트카드 리더, 보라색은 라즈베리파이 인터페이스입니다. 마우스로 회전해 앞면과 뒷면을 모두 확인할 수 있습니다.</p>
-      </section>
-      <section class="list">
-        <div class="list-head">부품 목록</div>
-        <div class="rows" id="componentRows">
-          <button class="component-row" data-ref="C31" data-group="power"><span class="row-ref">C31</span><span class="row-value">100n</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="C32" data-group="power"><span class="row-ref">C32</span><span class="row-value">1n</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="C41" data-group="smartcard"><span class="row-ref">C41</span><span class="row-value">33p</span><span class="row-group">스마트카드 리더</span></button>
-<button class="component-row" data-ref="C42" data-group="smartcard"><span class="row-ref">C42</span><span class="row-value">33p</span><span class="row-group">스마트카드 리더</span></button>
-<button class="component-row" data-ref="C43" data-group="smartcard"><span class="row-ref">C43</span><span class="row-value">100n</span><span class="row-group">스마트카드 리더</span></button>
-<button class="component-row" data-ref="C44" data-group="smartcard"><span class="row-ref">C44</span><span class="row-value">1u</span><span class="row-group">스마트카드 리더</span></button>
-<button class="component-row" data-ref="C45" data-group="smartcard"><span class="row-ref">C45</span><span class="row-value">100n</span><span class="row-group">스마트카드 리더</span></button>
-<button class="component-row" data-ref="C46" data-group="smartcard"><span class="row-ref">C46</span><span class="row-value">100n</span><span class="row-group">스마트카드 리더</span></button>
-<button class="component-row" data-ref="D1" data-group="power"><span class="row-ref">D1</span><span class="row-value">LED</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="D32" data-group="power"><span class="row-ref">D32</span><span class="row-value">SMF13CA</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="J21" data-group="rpi"><span class="row-ref">J21</span><span class="row-value">Adafruit_4079</span><span class="row-group">라즈베리파이 인터페이스</span></button>
-<button class="component-row" data-ref="J31" data-group="power"><span class="row-ref">J31</span><span class="row-value">USB_C_Receptacle_PowerOnly_6P</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="J41" data-group="smartcard"><span class="row-ref">J41</span><span class="row-value">475532001</span><span class="row-group">스마트카드 리더</span></button>
-<button class="component-row" data-ref="R31" data-group="power"><span class="row-ref">R31</span><span class="row-value">5.1K</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="R32" data-group="power"><span class="row-ref">R32</span><span class="row-value">5.1K</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="R33" data-group="power"><span class="row-ref">R33</span><span class="row-value">470k</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="R34" data-group="power"><span class="row-ref">R34</span><span class="row-value">18k</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="R35" data-group="power"><span class="row-ref">R35</span><span class="row-value">150k</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="R36" data-group="power"><span class="row-ref">R36</span><span class="row-value">24k</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="R37" data-group="power"><span class="row-ref">R37</span><span class="row-value">0R</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="R38" data-group="power"><span class="row-ref">R38</span><span class="row-value">560R</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="R39" data-group="power"><span class="row-ref">R39</span><span class="row-value">1k</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="R41" data-group="smartcard"><span class="row-ref">R41</span><span class="row-value">10K</span><span class="row-group">스마트카드 리더</span></button>
-<button class="component-row" data-ref="R42" data-group="smartcard"><span class="row-ref">R42</span><span class="row-value">100K</span><span class="row-group">스마트카드 리더</span></button>
-<button class="component-row" data-ref="R43" data-group="smartcard"><span class="row-ref">R43</span><span class="row-value">47R</span><span class="row-group">스마트카드 리더</span></button>
-<button class="component-row" data-ref="R44" data-group="smartcard"><span class="row-ref">R44</span><span class="row-value">100R</span><span class="row-group">스마트카드 리더</span></button>
-<button class="component-row" data-ref="R45" data-group="smartcard"><span class="row-ref">R45</span><span class="row-value">100R</span><span class="row-group">스마트카드 리더</span></button>
-<button class="component-row" data-ref="R46" data-group="smartcard"><span class="row-ref">R46</span><span class="row-value">100K</span><span class="row-group">스마트카드 리더</span></button>
-<button class="component-row" data-ref="U31" data-group="power"><span class="row-ref">U31</span><span class="row-value">TPS25961DRVR</span><span class="row-group">전원/보호</span></button>
-<button class="component-row" data-ref="U41" data-group="smartcard"><span class="row-ref">U41</span><span class="row-value">SEC1210PV-URT</span><span class="row-group">스마트카드 리더</span></button>
-        </div>
+        <div class="value">도면 또는 하단 테이블에서 부품을 선택하면 설명이 표시됩니다.</div>
+        <p class="purpose">상단 Top/Bottom/2D/3D 버튼과 하단 카테고리 필터로 부품 배치를 확인할 수 있습니다.</p>
       </section>
     </aside>
+    <section class="viewer">
+      <div class="canvas-wrap">
+        <canvas id="pcb3d" aria-label="SeedSigner Smartcard HAT 3D PCB 도면"></canvas>
+        <div class="hint">
+          X: -15.7mm<br>
+          Y: 44.21mm<br><br>
+          *부품 배치가 조정된 도면입니다. 부품의 방향과 위치를 확인하세요.
+        </div>
+      </div>
+    </section>
   </main>
+  <section class="component-panel">
+    <div class="panel-toolbar">
+      <div class="table-tabs">
+        <button class="tab active" type="button">Assembled (30)</button>
+        <button class="tab" type="button">Unassembled (0)</button>
+      </div>
+      <label class="side-check"><input type="checkbox"> Show Revised Items</label>
+      <div class="table-options">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="power">Power</button>
+        <button class="chip" data-filter="smartcard">Smartcard</button>
+        <button class="chip" data-filter="rpi">Raspberry Pi</button>
+        <span class="table-meta">Assembly Side: Both Sides&nbsp;&nbsp;|&nbsp;&nbsp;Total 30 designators</span>
+        <input id="search" class="search" type="search" placeholder="Search">
+        <span>DFM Results</span>
+        <select class="dfm-filter" aria-label="DFM result filter"><option>All</option></select>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="placement-table">
+        <thead>
+          <tr>
+            <th style="width: 8%;">Designator</th>
+            <th style="width: 22%;">Comment</th>
+            <th style="width: 10%;">Footprint</th>
+            <th style="width: 10%;">Part #</th>
+            <th style="width: 10%;">Assembly Side</th>
+            <th style="width: 14%;">Assembly Type</th>
+            <th style="width: 8%;">Assemble</th>
+            <th style="width: 18%;">DFM Results</th>
+          </tr>
+        </thead>
+        <tbody id="componentRows">
+          <tr class="component-row" data-ref="C31" data-group="power"><td class="row-ref">C31</td><td class="row-comment">100n</td><td>0805</td><td>C45783</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="C32" data-group="power"><td class="row-ref">C32</td><td class="row-comment">1n</td><td>0805</td><td>C45783</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="C41" data-group="smartcard"><td class="row-ref">C41</td><td class="row-comment">33p</td><td>0805</td><td>C45783</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="C42" data-group="smartcard"><td class="row-ref">C42</td><td class="row-comment">33p</td><td>0805</td><td>C45783</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="C43" data-group="smartcard"><td class="row-ref">C43</td><td class="row-comment">100n</td><td>0805</td><td>C45783</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="C44" data-group="smartcard"><td class="row-ref">C44</td><td class="row-comment">1u</td><td>0805</td><td>C45783</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="C45" data-group="smartcard"><td class="row-ref">C45</td><td class="row-comment">100n</td><td>0805</td><td>C45783</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="C46" data-group="smartcard"><td class="row-ref">C46</td><td class="row-comment">100n</td><td>0805</td><td>C45783</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="D1" data-group="power"><td class="row-ref">D1</td><td class="row-comment">LED</td><td>0805</td><td>C2297</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="D32" data-group="power"><td class="row-ref">D32</td><td class="row-comment">SMF13CA</td><td>P37_SOD-123FL_largerpads</td><td>-</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="J21" data-group="rpi"><td class="row-ref">J21</td><td class="row-comment">Adafruit_4079</td><td>Raspberry Pi Header</td><td>C2685112</td><td>bottom</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="J31" data-group="power"><td class="row-ref">J31</td><td class="row-comment">USB_C_Receptacle_PowerOnly_6P</td><td>USB-C</td><td>-</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="J41" data-group="smartcard"><td class="row-ref">J41</td><td class="row-comment">475532001</td><td>Smartcard Socket</td><td>C293333</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R31" data-group="power"><td class="row-ref">R31</td><td class="row-comment">5.1K</td><td>0805</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R32" data-group="power"><td class="row-ref">R32</td><td class="row-comment">5.1K</td><td>0805</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R33" data-group="power"><td class="row-ref">R33</td><td class="row-comment">470k</td><td>0805</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R34" data-group="power"><td class="row-ref">R34</td><td class="row-comment">18k</td><td>0805</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R35" data-group="power"><td class="row-ref">R35</td><td class="row-comment">150k</td><td>0805</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R36" data-group="power"><td class="row-ref">R36</td><td class="row-comment">24k</td><td>0805</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R37" data-group="power"><td class="row-ref">R37</td><td class="row-comment">0R</td><td>0603</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R38" data-group="power"><td class="row-ref">R38</td><td class="row-comment">560R</td><td>0805</td><td>-</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R39" data-group="power"><td class="row-ref">R39</td><td class="row-comment">1k</td><td>0805</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R41" data-group="smartcard"><td class="row-ref">R41</td><td class="row-comment">10K</td><td>0805</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R42" data-group="smartcard"><td class="row-ref">R42</td><td class="row-comment">100K</td><td>0805</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R43" data-group="smartcard"><td class="row-ref">R43</td><td class="row-comment">47R</td><td>0805</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R44" data-group="smartcard"><td class="row-ref">R44</td><td class="row-comment">100R</td><td>0805</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R45" data-group="smartcard"><td class="row-ref">R45</td><td class="row-comment">100R</td><td>0805</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="R46" data-group="smartcard"><td class="row-ref">R46</td><td class="row-comment">100K</td><td>0805</td><td>C17540</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="U31" data-group="power"><td class="row-ref">U31</td><td class="row-comment">TPS25961DRVR</td><td>DRV0006</td><td>C5571272</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+<tr class="component-row" data-ref="U41" data-group="smartcard"><td class="row-ref">U41</td><td class="row-comment">SEC1210PV-URT</td><td>QFN</td><td>-</td><td>top</td><td>SMT Assembly</td><td>Yes</td><td><span class="dfm-pass">Passed</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </div>
 <script>
 /**
@@ -348,7 +728,7 @@ let selectedRef = null;
 
 const canvas = document.getElementById("pcb3d");
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xeef4f1);
+scene.background = new THREE.Color(0xe6eaef);
 const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 2000);
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, preserveDrawingBuffer: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -886,12 +1266,15 @@ function setView(view) {
   if (view === "front") {
     targetRotationX = Math.PI / 2 - .001;
     targetRotationY = 0;
+    zoomDistance = 64;
   } else if (view === "back") {
     targetRotationX = -Math.PI / 2 + .001;
     targetRotationY = 0;
+    zoomDistance = 64;
   } else {
     targetRotationX = 0.76;
     targetRotationY = -0.52;
+    zoomDistance = 96;
   }
 }
 
@@ -1088,7 +1471,7 @@ document.getElementById("copperOpacity").addEventListener("input", applyFilters)
 window.addEventListener("resize", resize);
 buildScene();
 resize();
-setView("iso");
+setView("front");
 applyFilters();
 window.__PCB3D_READY = true;
 window.__PCB3D_COUNTS = { components: componentObjects.size, selectable: selectable.length, copper: copperObjects.length, labels: labelSprites.length, conductorLabels: labelSprites.filter(sprite => sprite.userData.isConductorLabel).length, selectionOverlays: selectionOverlays.size };
