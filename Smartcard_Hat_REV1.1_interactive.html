@@ -285,7 +285,7 @@ button, input, select { font: inherit; }
 .topbar-left { padding-left: 28px; }
 .topbar-right { padding-right: 28px; }
 .view-btn,
-.tool-btn,
+.fit-view-btn,
 .mode-btn {
   height: 30px;
   min-width: 54px;
@@ -296,10 +296,19 @@ button, input, select { font: inherit; }
   cursor: pointer;
   padding: 0 12px;
 }
-.tool-btn {
-  min-width: 30px;
-  padding: 0;
-  font-size: 17px;
+.fit-view-btn {
+  min-width: auto;
+  border: 1px solid #565b61;
+  color: #e8eaed;
+  font-size: 12px;
+  font-weight: 700;
+  transition: border-color .18s ease, background-color .18s ease, color .18s ease, transform .18s ease;
+}
+.fit-view-btn:hover {
+  border-color: #8ab9f2;
+  background: #2d4f73;
+}
+.fit-view-btn:active { transform: translateY(1px); }
 }
 .view-btn.active,
 .mode-btn.active {
@@ -315,22 +324,25 @@ button, input, select { font: inherit; }
   min-height: 0;
   position: relative;
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-columns: 190px minmax(0, 1fr) minmax(280px, 320px);
   background: #e6eaef;
 }
 .side-panel {
   min-width: 0;
-  padding: 12px 18px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   color: #555e68;
-  z-index: 4;
-  pointer-events: none;
+  background: #eef1f5;
+  border-right: 1px solid #d8dde3;
 }
-.side-panel label,
-.side-panel .info {
-  pointer-events: auto;
+.controls-title {
+  margin: 0 0 4px;
+  color: #68727d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0;
 }
 .viewer {
   min-width: 0;
@@ -354,6 +366,8 @@ button, input, select { font: inherit; }
 }
 .fine-controls {
   margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid #d8dde3;
   display: grid;
   gap: 7px;
   font-size: 12px;
@@ -361,13 +375,48 @@ button, input, select { font: inherit; }
 }
 .slider {
   display: grid;
-  grid-template-columns: 42px 1fr;
+  grid-template-columns: 1fr;
   align-items: center;
-  gap: 7px;
+  gap: 4px;
   color: #6f7780;
   font-size: 12px;
 }
+.slider span { font-weight: 600; }
 .slider input { width: 100%; }
+.controls-divider {
+  height: 1px;
+  margin: 7px 0 1px;
+  background: #d8dde3;
+}
+.role-controls {
+  display: grid;
+  gap: 6px;
+}
+.role-controls .controls-title { margin-bottom: 2px; }
+.role-filter {
+  width: 100%;
+  min-height: 32px;
+  border: 1px solid #d2d9e1;
+  border-radius: 4px;
+  padding: 0 10px;
+  background: #f8fafc;
+  color: #46515c;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
+}
+.role-filter:hover {
+  border-color: #8cbcf4;
+  background: #f1f7ff;
+}
+.role-filter:active { transform: translateY(1px); }
+.role-filter.active {
+  border-color: #1677ff;
+  background: #1677ff;
+  color: #fff;
+}
 .canvas-wrap {
   height: 100%;
   min-height: 0;
@@ -393,42 +442,101 @@ button, input, select { font: inherit; }
   font-size: 12px;
   pointer-events: none;
 }
+.inspector-panel {
+  min-width: 0;
+  min-height: 0;
+  padding: 16px;
+  background: #f7f9fb;
+  border-left: 1px solid #d8dde3;
+  overflow: hidden;
+}
 .info {
-  margin-top: auto;
-  max-height: 260px;
+  margin: 0;
+  width: 100%;
+  max-height: none;
   overflow: auto;
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: #8a929a;
-  font-size: 12px;
-  line-height: 1.45;
+  color: #5f6974;
+  font-size: 13px;
+  line-height: 1.5;
   padding: 0;
 }
+.inspector-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 22px;
+  color: #65707c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.group-badge {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: 1px solid #c9def8;
+  border-radius: 3px;
+  padding: 2px 6px;
+  background: #edf6ff;
+  color: #0c62c5;
+  font-size: 11px;
+  letter-spacing: 0;
+}
 .info .eyebrow {
-  color: #818991;
+  margin-top: 12px;
+  color: #78828d;
   font-size: 11px;
   font-weight: 700;
 }
 .info h2 {
-  margin: 4px 0;
-  color: #4c555e;
-  font-size: 16px;
+  margin: 5px 0 4px;
+  color: #252c33;
+  font-size: 23px;
+  line-height: 1.18;
 }
 .info .value {
-  color: #7b848d;
-  margin-bottom: 7px;
+  margin: 0;
+  padding-bottom: 13px;
+  border-bottom: 1px solid #dfe5eb;
+  color: #626d78;
+  font-size: 12px;
+  word-break: break-word;
 }
-.info .purpose { margin: 0 0 8px; }
+.purpose-block {
+  margin: 14px 0 15px;
+  padding: 10px 12px 11px;
+  border-left: 3px solid #1677ff;
+  background: #eaf4ff;
+}
+.purpose-label {
+  display: block;
+  margin-bottom: 5px;
+  color: #1966c2;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.info .purpose {
+  margin: 0;
+  color: #263849;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.62;
+}
 .facts {
   display: grid;
-  grid-template-columns: 64px 1fr;
-  gap: 4px 8px;
+  grid-template-columns: 70px minmax(0, 1fr);
+  gap: 7px 8px;
   font-size: 12px;
 }
-.facts dt { color: #8a929a; }
+.facts dt { color: #77818c; }
 .facts dd {
   margin: 0;
+  color: #3f4851;
   min-width: 0;
   word-break: break-word;
 }
@@ -441,10 +549,16 @@ button, input, select { font: inherit; }
 .net {
   border: 1px solid #d6dce2;
   background: #fff;
-  border-radius: 999px;
+  border-radius: 3px;
   padding: 2px 6px;
   font-size: 11px;
   color: #5c6570;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #1677ff;
+  outline-offset: 2px;
 }
 .component-panel {
   min-height: 0;
@@ -584,11 +698,43 @@ button, input, select { font: inherit; }
 @media (max-width: 980px) {
   .app { grid-template-rows: 40px minmax(0, 1fr) 320px; }
   .workspace { grid-template-columns: 150px minmax(0, 1fr); }
+  .side-panel { padding: 12px; }
+  .controls-title { font-size: 10px; }
+  .inspector-panel {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    width: min(330px, 48vw);
+    max-height: min(360px, 62%);
+    border-top: 1px solid #d8dde3;
+    box-shadow: -5px -5px 16px rgba(42, 54, 66, .12);
+  }
   .topbar-left { padding-left: 8px; }
   .topbar-right { padding-right: 8px; }
   .table-meta { display: none; }
   .panel-toolbar { padding-inline: 10px; gap: 8px; }
   .search { width: 150px; }
+}
+@media (max-width: 640px) {
+  .app { grid-template-rows: 40px minmax(0, 1fr) 290px; }
+  .workspace { grid-template-columns: minmax(0, 1fr); }
+  .side-panel { display: none; }
+  .inspector-panel {
+    width: min(330px, calc(100% - 20px));
+    right: 10px;
+    bottom: 10px;
+    max-height: 52%;
+    padding: 13px;
+  }
+  .info h2 { font-size: 20px; }
+  .purpose-block { margin-block: 10px; }
+  .panel-toolbar { overflow-x: auto; }
+  .table-options { flex: 0 0 auto; }
+  .panel-toolbar > .side-check,
+  .table-options > span { display: none; }
+  .search,
+  .dfm-filter { display: none; }
 }
 </style>
 </head>
@@ -598,11 +744,7 @@ button, input, select { font: inherit; }
     <div class="topbar-left">
       <button class="view-btn active" data-view="front">Top</button>
       <button class="view-btn" data-view="back">Bottom</button>
-      <button class="tool-btn" type="button" title="공유">↗</button>
-      <button class="tool-btn" type="button" title="저장">⇩</button>
-      <button class="tool-btn" type="button" title="확대">＋</button>
-      <button class="tool-btn" type="button" title="축소">－</button>
-      <button class="tool-btn" type="button" title="화면 맞춤">⌖</button>
+      <button class="fit-view-btn" id="fitView" type="button">화면 맞춤</button>
     </div>
     <div class="topbar-center">
       <button class="mode-btn active view-btn" data-view="front">2D</button>
@@ -613,22 +755,24 @@ button, input, select { font: inherit; }
     </div>
   </header>
   <main class="workspace">
-    <aside class="side-panel">
-      <label class="side-check"><input type="checkbox" disabled> Hide Drilled Holes</label>
-      <label class="side-check"><input id="toggleComponents" type="checkbox" checked> Show Components</label>
-      <label class="side-check"><input id="toggleLabels" type="checkbox" checked> Show Designator</label>
-      <label class="side-check"><input id="toggleCopper" type="checkbox" checked> Show Conductors</label>
-      <label class="side-check"><input id="toggleTop" type="checkbox" checked> Top Side</label>
-      <label class="side-check"><input id="toggleBottom" type="checkbox" checked> Bottom Side</label>
+    <aside class="side-panel controls-panel" aria-label="도면 표시 설정">
+      <p class="controls-title">표시 설정</p>
+      <label class="side-check"><input id="toggleComponents" type="checkbox" checked> 부품 표시</label>
+      <label class="side-check"><input id="toggleLabels" type="checkbox" checked> 라벨 표시</label>
+      <label class="side-check"><input id="toggleCopper" type="checkbox" checked> 배선 표시</label>
+      <label class="side-check"><input id="toggleTop" type="checkbox" checked> 앞면 표시</label>
+      <label class="side-check"><input id="toggleBottom" type="checkbox" checked> 뒷면 표시</label>
       <div class="fine-controls">
-        <label class="slider">기판 <input id="boardOpacity" type="range" min="0.12" max="0.9" step="0.01" value="0.42"></label>
-        <label class="slider">배선 <input id="copperOpacity" type="range" min="0" max="1" step="0.01" value="0.72"></label>
+        <label class="slider"><span>기판 투명도</span><input id="boardOpacity" type="range" min="0.12" max="0.9" step="0.01" value="0.42"></label>
+        <label class="slider"><span>배선 투명도</span><input id="copperOpacity" type="range" min="0" max="1" step="0.01" value="0.72"></label>
       </div>
-      <section class="info" id="infoPanel" aria-live="polite">
-        <div class="eyebrow">선택 대기</div>
-        <h2>부품을 클릭하세요</h2>
-        <div class="value">도면 또는 하단 테이블에서 부품을 선택하면 설명이 표시됩니다.</div>
-        <p class="purpose">상단 Top/Bottom/2D/3D 버튼과 하단 카테고리 필터로 부품 배치를 확인할 수 있습니다.</p>
+      <div class="controls-divider" aria-hidden="true"></div>
+      <section class="role-controls" aria-label="회로 영역 하이라이트">
+        <p class="controls-title">회로 영역 하이라이트</p>
+        <button class="role-filter active" type="button" data-filter="all" aria-pressed="true">전체 부품</button>
+        <button class="role-filter" type="button" data-filter="power" aria-pressed="false">전원 보호</button>
+        <button class="role-filter" type="button" data-filter="smartcard" aria-pressed="false">스마트카드</button>
+        <button class="role-filter" type="button" data-filter="rpi" aria-pressed="false">라즈베리 파이</button>
       </section>
     </aside>
     <section class="viewer">
@@ -641,6 +785,22 @@ button, input, select { font: inherit; }
         </div>
       </div>
     </section>
+    <aside class="inspector-panel" aria-label="선택 부품 정보">
+      <section class="info" id="infoPanel" aria-live="polite">
+        <div class="inspector-kicker"><span>선택된 부품</span><span class="group-badge">정보 패널</span></div>
+        <div class="eyebrow">선택 대기</div>
+        <h2>부품을 클릭하세요</h2>
+        <div class="value">도면 또는 하단 테이블에서 부품을 선택하면 상세 정보가 표시됩니다.</div>
+        <section class="purpose-block">
+          <span class="purpose-label">부품 용도</span>
+          <p class="purpose">선택한 부품이 담당하는 기능을 쉬운 한국어 설명으로 확인할 수 있습니다.</p>
+        </section>
+        <dl class="facts">
+          <dt>확인 방법</dt><dd>도면의 부품 또는 하단 표 행을 클릭하세요.</dd>
+          <dt>표시 영역</dt><dd>부품 용도, 회로도 위치, 연결 신호를 순서대로 보여줍니다.</dd>
+        </dl>
+      </section>
+    </aside>
   </main>
   <section class="component-panel">
     <div class="panel-toolbar">
@@ -650,10 +810,10 @@ button, input, select { font: inherit; }
       </div>
       <label class="side-check"><input type="checkbox"> Show Revised Items</label>
       <div class="table-options">
-        <button class="chip active" data-filter="all">All</button>
-        <button class="chip" data-filter="power">Power</button>
-        <button class="chip" data-filter="smartcard">Smartcard</button>
-        <button class="chip" data-filter="rpi">Raspberry Pi</button>
+        <button class="chip active" type="button" data-filter="all" aria-pressed="true">전체</button>
+        <button class="chip" type="button" data-filter="power" aria-pressed="false">전원 보호</button>
+        <button class="chip" type="button" data-filter="smartcard" aria-pressed="false">스마트카드</button>
+        <button class="chip" type="button" data-filter="rpi" aria-pressed="false">라즈베리 파이</button>
         <span class="table-meta">Assembly Side: Both Sides&nbsp;&nbsp;|&nbsp;&nbsp;Total 30 designators</span>
         <input id="search" class="search" type="search" placeholder="Search">
         <span>DFM Results</span>
@@ -1278,6 +1438,11 @@ function setView(view) {
   }
 }
 
+function fitBoardToViewport() {
+  const isFaceOn = Math.abs(Math.abs(targetRotationX) - Math.PI / 2) < .18 && Math.abs(targetRotationY) < .18;
+  zoomDistance = isFaceOn ? 64 : 96;
+}
+
 function updateStepHighlights() {
   const q = document.getElementById("search")?.value.trim().toLowerCase() || "";
   stepMeshObjects.forEach(obj => {
@@ -1334,10 +1499,14 @@ function selectComponent(ref) {
     ? `<div class="net-list">${comp.nets.slice(0, 14).map(n => `<span class="net">${esc(netName(n))}</span>`).join("")}</div>`
     : "연결 넷 없음";
   document.getElementById("infoPanel").innerHTML = `
-    <div class="eyebrow">${esc(comp.groupKo)} · ${comp.layer === "bottom" ? "하면" : "상면"}</div>
+    <div class="inspector-kicker"><span>선택된 부품</span><span class="group-badge">${esc(comp.groupKo)}</span></div>
+    <div class="eyebrow">${comp.layer === "bottom" ? "하면" : "상면"} · ${esc(comp.groupKo)}</div>
     <h2>${esc(comp.ref)}</h2>
     <div class="value">${esc(comp.value)} · ${esc(comp.footprint)}</div>
-    <p class="purpose">${esc(comp.purpose)}</p>
+    <section class="purpose-block">
+      <span class="purpose-label">부품 용도</span>
+      <p class="purpose">${esc(comp.purpose)}</p>
+    </section>
     <dl class="facts">
       <dt>좌표</dt><dd>X ${comp.x.toFixed(3)} mm, Y ${comp.y.toFixed(3)} mm</dd>
       <dt>회전</dt><dd>${comp.rotation}°</dd>
@@ -1406,9 +1575,8 @@ function applyFilters() {
   labelSprites.forEach(sprite => {
     const layer = sprite.userData.layer;
     const layerVisible = (layer === "top" && showTop) || (layer === "bottom" && showBottom) || !layer;
-    const copperLabelVisible = !sprite.userData.isConductorLabel || showCopper;
     const componentLabelVisible = !sprite.userData.isComponentLabel || showComponents;
-    sprite.visible = showLabels && copperLabelVisible && componentLabelVisible && layerVisible;
+    sprite.visible = showLabels && componentLabelVisible && layerVisible;
   });
   document.querySelectorAll(".component-row").forEach(row => {
     const comp = byRef.get(row.dataset.ref);
@@ -1454,14 +1622,19 @@ canvas.addEventListener("wheel", event => {
 }, { passive: false });
 
 document.querySelectorAll(".component-row").forEach(row => row.addEventListener("click", () => selectComponent(row.dataset.ref)));
-document.querySelectorAll(".chip").forEach(button => {
+document.querySelectorAll("[data-filter]").forEach(button => {
   button.addEventListener("click", () => {
     currentFilter = button.dataset.filter;
-    document.querySelectorAll(".chip").forEach(chip => chip.classList.toggle("active", chip === button));
+    document.querySelectorAll("[data-filter]").forEach(control => {
+      const active = control.dataset.filter === currentFilter;
+      control.classList.toggle("active", active);
+      control.setAttribute("aria-pressed", active ? "true" : "false");
+    });
     applyFilters();
   });
 });
 document.querySelectorAll(".view-btn").forEach(button => button.addEventListener("click", () => setView(button.dataset.view)));
+document.getElementById("fitView").addEventListener("click", fitBoardToViewport);
 ["search", "toggleTop", "toggleBottom", "toggleComponents", "toggleCopper", "toggleLabels"].forEach(id => document.getElementById(id).addEventListener("input", applyFilters));
 document.getElementById("boardOpacity").addEventListener("input", event => {
   boardMaterials.forEach(mat => setMaterialOpacity(mat, Number(event.target.value)));
