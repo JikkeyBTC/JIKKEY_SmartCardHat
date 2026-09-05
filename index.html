@@ -310,7 +310,6 @@ button, input, select { font: inherit; }
   background: #2d4f73;
 }
 .fit-view-btn:active { transform: translateY(1px); }
-}
 .view-btn.active,
 .mode-btn.active {
   background: #1677ff;
@@ -571,6 +570,8 @@ select:focus-visible {
 }
 .panel-toolbar {
   min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
   display: flex;
   align-items: center;
   gap: 14px;
@@ -602,7 +603,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex: 1;
+  flex: 1 0 auto;
   color: #636b74;
   font-size: 13px;
 }
@@ -696,46 +697,93 @@ select:focus-visible {
   color: #2f9e65;
   font-weight: 700;
 }
+.mobile-picker { display: none; }
 @media (max-width: 980px) {
-  .app { grid-template-rows: 40px minmax(0, 1fr) 320px; }
-  .workspace { grid-template-columns: 150px minmax(0, 1fr); }
-  .side-panel { padding: 12px; }
-  .controls-title { font-size: 10px; }
+  body {
+    height: auto;
+    overflow: auto;
+    font-size: 16px;
+  }
+  .app {
+    height: auto;
+    min-height: 100svh;
+    grid-template-rows: auto 1fr;
+  }
+  .topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 4px;
+    padding: 10px max(12px, env(safe-area-inset-right)) 10px max(12px, env(safe-area-inset-left));
+  }
+  .topbar-right {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding: 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .topbar-left,
+  .topbar-center { gap: 4px; padding: 0; }
+  .topbar .view-btn,
+  .fit-view-btn {
+    min-width: 44px;
+    height: 44px;
+    padding-inline: 8px;
+    font-size: 14px;
+  }
+  .workspace {
+    display: flex;
+    flex-direction: column;
+  }
+  .side-panel,
+  .component-panel { display: none; }
+  .mobile-picker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #f7f9fb;
+    border-bottom: 1px solid #d8dde3;
+  }
+  .mobile-picker label { flex: 0 0 auto; font-size: 14px; font-weight: 700; }
+  .mobile-picker select {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    min-height: 44px;
+    padding: 8px;
+    border: 1px solid #c8d4e0;
+    border-radius: 6px;
+    background: #fff;
+    color: #252c33;
+    font-size: 16px;
+  }
+  .viewer { flex: none; }
+  .canvas-wrap { height: clamp(240px, 48svh, 520px); min-height: 0; }
+  #pcb3d { touch-action: pan-y pinch-zoom; }
+  .hint { display: none; }
   .inspector-panel {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    z-index: 5;
-    width: min(330px, 48vw);
-    max-height: min(360px, 62%);
+    position: static;
+    display: block;
+    width: 100%;
+    max-height: none;
+    padding: 20px max(20px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+    overflow: visible;
+    border-left: 0;
     border-top: 1px solid #d8dde3;
-    box-shadow: -5px -5px 16px rgba(42, 54, 66, .12);
+    box-shadow: none;
+    scroll-margin-top: 12px;
   }
-  .topbar-left { padding-left: 8px; }
-  .topbar-right { padding-right: 8px; }
-  .table-meta { display: none; }
-  .panel-toolbar { padding-inline: 10px; gap: 8px; }
-  .search { width: 150px; }
-}
-@media (max-width: 640px) {
-  .app { grid-template-rows: 40px minmax(0, 1fr) 290px; }
-  .workspace { grid-template-columns: minmax(0, 1fr); }
-  .side-panel { display: none; }
-  .inspector-panel {
-    width: min(330px, calc(100% - 20px));
-    right: 10px;
-    bottom: 10px;
-    max-height: 52%;
-    padding: 13px;
-  }
-  .info h2 { font-size: 20px; }
-  .purpose-block { margin-block: 10px; }
-  .panel-toolbar { overflow-x: auto; }
-  .table-options { flex: 0 0 auto; }
-  .panel-toolbar > .side-check,
-  .table-options > span { display: none; }
-  .search,
-  .dfm-filter { display: none; }
+  .info { overflow: visible; }
+  .info .inspector-kicker,
+  .info .eyebrow,
+  .info .facts { display: none; }
+  .info h2 { margin-top: 0; font-size: 24px; }
+  .info .value { font-size: 14px; line-height: 1.5; }
+  .purpose-block { margin: 14px 0 0; padding: 12px 14px; }
+  .purpose-label { font-size: 14px; }
+  .info .purpose { font-size: 16px; line-height: 1.75; font-weight: 500; overflow-wrap: anywhere; }
 }
 </style>
 </head>
@@ -776,6 +824,12 @@ select:focus-visible {
         <button class="role-filter" type="button" data-filter="rpi" aria-pressed="false">라즈베리 파이</button>
       </section>
     </aside>
+    <div class="mobile-picker">
+      <label for="mobileComponentSelect">부품 선택</label>
+      <select id="mobileComponentSelect" aria-controls="infoPanel">
+        <option value="" disabled selected>도면을 누르거나 부품을 선택하세요</option>
+      </select>
+    </div>
     <section class="viewer">
       <div class="canvas-wrap">
         <canvas id="pcb3d" aria-label="SeedSigner Smartcard HAT 3D PCB 도면"></canvas>
@@ -791,7 +845,7 @@ select:focus-visible {
         <div class="inspector-kicker"><span>선택된 부품</span><span class="group-badge">정보 패널</span></div>
         <div class="eyebrow">선택 대기</div>
         <h2>부품을 클릭하세요</h2>
-        <div class="value">도면 또는 하단 테이블에서 부품을 선택하면 상세 정보가 표시됩니다.</div>
+        <div class="value">도면 또는 부품 목록에서 선택하면 부품 설명이 표시됩니다.</div>
         <section class="purpose-block">
           <span class="purpose-label">부품 용도</span>
           <p class="purpose">선택한 부품이 담당하는 기능을 쉬운 한국어 설명으로 확인할 수 있습니다.</p>
@@ -898,6 +952,12 @@ const RESTORED_COPPER_PADS = [
   },
 ];
 const byRef = new Map(COMPONENTS.map(c => [c.ref, c]));
+const mobileViewport = window.matchMedia("(max-width: 980px)");
+const mobileComponentSelect = document.getElementById("mobileComponentSelect");
+COMPONENTS.forEach(comp => {
+  mobileComponentSelect.add(new Option(`${comp.ref} · ${comp.value}`, comp.ref));
+});
+mobileComponentSelect.addEventListener("change", () => selectComponent(mobileComponentSelect.value));
 let currentFilter = "all";
 let selectedRef = null;
 
@@ -933,10 +993,11 @@ const selectable = [];
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
-const mouseState = { down: false, x: 0, y: 0, moved: 0 };
+const mouseState = { down: false, pointerId: null, x: 0, y: 0, moved: 0 };
 let targetRotationX = 0.76;
 let targetRotationY = -0.52;
 let zoomDistance = 96;
+let fittedZoomDistance = zoomDistance;
 const hasStepMesh = !!(PCB_DATA.stepMesh && PCB_DATA.stepMesh.groups && PCB_DATA.stepMesh.groups.length);
 const stepMeshObjects = [];
 const STEP_Z_OFFSET = 0.455;
@@ -1469,6 +1530,7 @@ function resize() {
   renderer.setSize(Math.max(1, rect.width), Math.max(1, rect.height), false);
   camera.aspect = rect.width / Math.max(1, rect.height);
   camera.updateProjectionMatrix();
+  fitBoardToViewport();
 }
 
 function updateCamera() {
@@ -1503,11 +1565,28 @@ function setView(view) {
     targetRotationY = -0.42;
     zoomDistance = 76;
   }
+  fitBoardToViewport();
 }
 
 function fitBoardToViewport() {
-  const isFaceOn = Math.abs(Math.abs(targetRotationX) - Math.PI / 2) < .18 && Math.abs(targetRotationY) < .18;
-  zoomDistance = isFaceOn ? 64 : 76;
+  // Fit the board and component height to both viewport dimensions at the current angle.
+  updateCamera();
+  camera.updateMatrixWorld();
+  const inverseRotation = camera.quaternion.clone().invert();
+  const verticalSlope = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+  const horizontalSlope = verticalSlope * camera.aspect;
+  let distance = 0;
+  const componentHeight = Math.max(5, ...COMPONENTS.map(comp => Number(comp.model?.h) || 0));
+  for (const x of [-boardW / 2 - 2, boardW / 2 + 2]) {
+    for (const y of [-componentHeight - 1, componentHeight + 1]) {
+      for (const z of [-boardH / 2 - 2, boardH / 2 + 2]) {
+        const point = new THREE.Vector3(x, y, z).applyQuaternion(inverseRotation);
+        distance = Math.max(distance, point.z + Math.abs(point.x) / horizontalSlope, point.z + Math.abs(point.y) / verticalSlope);
+      }
+    }
+  }
+  zoomDistance = Math.max(34, distance * 1.08);
+  fittedZoomDistance = zoomDistance;
 }
 
 function updateStepHighlights() {
@@ -1546,6 +1625,7 @@ function selectComponent(ref) {
   if (!comp) return;
   const q = document.getElementById("search").value.trim().toLowerCase();
   selectedRef = ref;
+  mobileComponentSelect.value = ref;
   for (const [key, mat] of componentMaterials) {
     const obj = componentObjects.get(key);
     const item = byRef.get(key);
@@ -1582,6 +1662,13 @@ function selectComponent(ref) {
       <dt>연결 신호</dt><dd>${nets}</dd>
     </dl>
   `;
+  if (mobileViewport.matches) {
+    const inspector = document.querySelector(".inspector-panel");
+    // Keep the board in view when the complete description already fits on screen.
+    if (inspector.getBoundingClientRect().bottom > window.innerHeight) {
+      inspector.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "nearest" });
+    }
+  }
 }
 
 function syncBoardOpacity() {
@@ -1663,14 +1750,16 @@ function applyFilters() {
 }
 
 canvas.addEventListener("pointerdown", event => {
+  if (!event.isPrimary || event.button !== 0) return;
   mouseState.down = true;
+  mouseState.pointerId = event.pointerId;
   mouseState.x = event.clientX;
   mouseState.y = event.clientY;
   mouseState.moved = 0;
   canvas.setPointerCapture(event.pointerId);
 });
 canvas.addEventListener("pointermove", event => {
-  if (!mouseState.down) return;
+  if (!mouseState.down || mouseState.pointerId !== event.pointerId) return;
   const dx = event.clientX - mouseState.x;
   const dy = event.clientY - mouseState.y;
   mouseState.x = event.clientX;
@@ -1680,7 +1769,10 @@ canvas.addEventListener("pointermove", event => {
   targetRotationX = Math.max(-1.55, Math.min(1.55, targetRotationX + dy * 0.009));
 });
 canvas.addEventListener("pointerup", event => {
+  if (!mouseState.down || mouseState.pointerId !== event.pointerId) return;
   mouseState.down = false;
+  mouseState.pointerId = null;
+  if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
   if (mouseState.moved > 6) return;
   const rect = canvas.getBoundingClientRect();
   pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -1691,9 +1783,15 @@ canvas.addEventListener("pointerup", event => {
   hits.sort((a, b) => (a.object.userData.area || 0) - (b.object.userData.area || 0));
   selectComponent(hits[0].object.userData.ref);
 });
+["pointercancel", "lostpointercapture"].forEach(type => canvas.addEventListener(type, event => {
+  if (mouseState.pointerId !== event.pointerId) return;
+  mouseState.down = false;
+  mouseState.pointerId = null;
+  mouseState.moved = 0;
+}));
 canvas.addEventListener("wheel", event => {
   event.preventDefault();
-  zoomDistance = Math.max(34, Math.min(160, zoomDistance + event.deltaY * .08));
+  zoomDistance = Math.max(34, Math.min(Math.max(160, fittedZoomDistance * 2), zoomDistance + event.deltaY * .08));
 }, { passive: false });
 
 document.querySelectorAll(".component-row").forEach(row => row.addEventListener("click", () => selectComponent(row.dataset.ref)));
